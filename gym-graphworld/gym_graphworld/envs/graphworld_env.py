@@ -19,13 +19,13 @@ COLORS = {0:[0.0,0.0,0.0], 1:[0.5,0.5,0.5], \
 class GraphworldEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, graph):
+    def __init__(self, graph, dim):
         super(GraphworldEnv, self).__init__()
         self.actions = [0, 1, 2, 3, 4]
         self.action_space = spaces.Discrete(5)
         self.action_pos_dict = {0: [0,0], 1:[-1, 0], 2:[1,0], 3:[0,-1], 4:[0,1]}
 
-        self.dim = (11,11)
+        self.dim = dim
         self.obs_shape = [self.dim[0], self.dim[1], 3]
         self.observation_space = spaces.Box(low=0, high=1, shape=self.obs_shape, dtype=np.float32)
 
@@ -33,7 +33,7 @@ class GraphworldEnv(gym.Env):
         self.teleporters = [node for node in self.graph if self._teleport_edge(node)]
 
         self.agent_start_state = (0,0)
-        self.agent_target_state = (10,10)
+        self.agent_target_state = (self.dim[0] - 1, self.dim[1] - 1)
         self.agent_state = copy.deepcopy(self.agent_start_state)
 
         self.observation = self._next_observation()
