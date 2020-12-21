@@ -4,7 +4,7 @@ import networkx as nx
 import copy
 from collections import defaultdict
 import numpy as np
-from mc import epsilon_greedy, q_learning, sarsa
+from mc import epsilon_greedy, q_learning, q_learning_mm, sarsa, sarsa_mm
 from utils import add_kleinberg_edges, add_random_edges
 
 d = (11,11)
@@ -20,13 +20,13 @@ env = gym.make('graphworld-v0', graph = g, dim = d)
 nA = env.action_space.n
 
 Q = defaultdict(lambda: np.random.rand(nA))
-Q = sarsa(env, n_episodes = 100, gamma = 0.95)
+Q = sarsa_mm(env, n_episodes = 100, gamma = 0.95)
 
 for i in range(100):
     done = False
     state = env.reset()
     while not done:
         env.render()
-        action = epsilon_greedy(Q, state, nA, 0)
+        action = np.argmax(Q[state])
         next_state, reward, done, info = env.step(action)
         state = next_state

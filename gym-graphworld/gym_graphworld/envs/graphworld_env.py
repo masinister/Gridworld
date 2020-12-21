@@ -59,7 +59,7 @@ class GraphworldEnv(gym.Env):
         plt.clf()
         plt.imshow(img)
         fig.canvas.draw()
-        plt.pause(0.001)
+        plt.pause(0.000001)
 
     def _take_action(self, action):
         if action == 0 and self.agent_state in self.teleporters:
