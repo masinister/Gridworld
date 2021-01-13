@@ -55,9 +55,11 @@ def sarsa_mm(env, n_episodes, gamma=0.95, alpha=0.01, omega=1.0):
             action = next_action
     return Q
 
-def q_learning(env, n_episodes, gamma=0.95, alpha=0.01, epsilon=1.0):
+def q_learning(env, n_episodes, gamma=0.95, alpha=0.1, epsilon=1.0):
     # ON policy TD control
     Q = defaultdict(lambda: np.zeros(env.action_space.n))
+    learning_curve = []
+    q = 0
     for e in tqdm(range(n_episodes)):
         epsilon *= 0.99
         done = False
@@ -69,8 +71,11 @@ def q_learning(env, n_episodes, gamma=0.95, alpha=0.01, epsilon=1.0):
             td_target = reward + gamma * np.amax(Q[next_state])
             td_error = td_target - Q[state][action]
             Q[state][action] += alpha * td_error
+            q += alpha * td_error
             state = next_state
-    return Q
+
+        learning_curve.append(q)
+    return Q, learning_curve
 
 def q_learning_mm(env, n_episodes, gamma=0.95, alpha=0.01, omega=1.0):
     # ON policy TD control
