@@ -2,17 +2,8 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-
-def n_regular_bipartite(size = 20, n = 4):
-    G = nx.Graph()
-    G.add_nodes_from(list(range(size)), bipartite = 0)
-    G.add_nodes_from(list(range(size + 1, size + size)), bipartite = 1)
-    P = np.transpose([list(np.random.permutation(size)) for _ in range(n)])
-    while np.any([len(set(p)) != len(p) for p in P]):
-        P = np.transpose([list(np.random.permutation(size)) for _ in range(n)])
-    for i in range(size):
-        G.add_edges_from([(size + i, p) for p in P[i]])
-    return G
+import copy
+from heuristics import cover_time, diameter, connectivity, eigenvalue_n
 
 def add_random_edges(G, n):
     non_edges = list(nx.non_edges(G))
@@ -29,3 +20,9 @@ def add_kleinberg_edges(G, n, r):
     edge_indices = np.random.choice(len(non_edges), n, p = prob)
     for i in edge_indices:
         G.add_edge(non_edges[i][0],non_edges[i][1])
+
+def params(g):
+    g = copy.deepcopy(g)
+    walls = [n for n in list(g.nodes) if g.degree(n)==0]
+    g.remove_nodes_from(walls)
+    return diameter(g), connectivity(g), cover_time(g), eigenvalue_n(g, 1)

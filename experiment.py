@@ -5,8 +5,7 @@ import copy
 from collections import defaultdict
 import numpy as np
 from mc import q_learning, sarsa
-from utils import add_kleinberg_edges, add_random_edges
-from heuristics import cover_time, conductance, diameter
+from utils import add_kleinberg_edges, add_random_edges, params
 from plot import plot
 import concurrent.futures as cf
 
@@ -18,16 +17,16 @@ edges_to_remove = basegraph.edges(nodes_to_remove)
 basegraph.remove_edges_from(copy.deepcopy(edges_to_remove))
 
 def run_one_trial(g):
-    add_random_edges(g, n= np.random.randint(5))
+    add_random_edges(g, n = np.random.randint(1, 5))
 
     env = gym.make('graphworld-v0', graph = g, dim = d)
     nA = env.action_space.n
 
     Q, lc = q_learning(env, n_episodes = 500, gamma = 0.95)
-    return cover_time(g), diameter(g), [lc]
+    return params(g), [lc]
 
 data = []
-num_trials = 10
+num_trials = 2
 
 with cf.ThreadPoolExecutor(max_workers=1) as executor:
     futures = [executor.submit(run_one_trial, copy.deepcopy(basegraph)) for _ in range(num_trials)]

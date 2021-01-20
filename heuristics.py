@@ -2,11 +2,9 @@ import random
 import networkx as nx
 import itertools
 import copy
+import numpy as np
 
 def cover_time(g, iter=1000):
-    g = copy.deepcopy(g)
-    walls = [n for n in list(g.nodes) if g.degree(n)==0]
-    g.remove_nodes_from(walls)
     sum = 0
     for i in range(iter):
         t = 1
@@ -21,9 +19,6 @@ def cover_time(g, iter=1000):
     return sum / iter
 
 def conductance(g):
-    g = copy.deepcopy(g)
-    walls = [n for n in list(g.nodes) if g.degree(n)==0]
-    g.remove_nodes_from(walls)
     nodes = list(g.nodes)
     min = nx.conductance(g, [nodes[0]])
     for n in range(int(g.number_of_nodes() / 2)):
@@ -35,7 +30,22 @@ def conductance(g):
     return min
 
 def diameter(g):
-    g = copy.deepcopy(g)
-    walls = [n for n in list(g.nodes) if g.degree(n)==0]
-    g.remove_nodes_from(walls)
     return nx.algorithms.distance_measures.diameter(g)
+
+def connectivity(g):
+    return nx.algebraic_connectivity(g)
+
+def eigenvalue_n(g, n=0):
+    L = nx.normalized_laplacian_matrix(g)
+    e = np.linalg.eigvals(L.A)
+    return e[n]
+
+def max_eigenvalue(g, n=0):
+    L = nx.normalized_laplacian_matrix(g)
+    e = np.linalg.eigvals(L.A)
+    return max(e)
+
+def min_eigenvalue(g, n=0):
+    L = nx.normalized_laplacian_matrix(g)
+    e = np.linalg.eigvals(L.A)
+    return max(e)

@@ -4,8 +4,8 @@ import networkx as nx
 import copy
 from collections import defaultdict
 import numpy as np
-from mc import epsilon_greedy, q_learning, q_learning_mm, sarsa, sarsa_mm
-from utils import add_kleinberg_edges, add_random_edges
+from mc import epsilon_greedy, q_learning, sarsa
+from utils import add_kleinberg_edges, add_random_edges, params
 
 d = (11,11)
 g = nx.grid_graph(dim = d)
@@ -15,12 +15,13 @@ edges_to_remove = g.edges(nodes_to_remove)
 g.remove_edges_from(copy.deepcopy(edges_to_remove))
 # add_kleinberg_edges(g, n=1, r=2)
 add_random_edges(g, n=1)
+print(params(g))
 
 env = gym.make('graphworld-v0', graph = g, dim = d)
 nA = env.action_space.n
 
 Q = defaultdict(lambda: np.random.rand(nA))
-Q = sarsa_mm(env, n_episodes = 100, gamma = 0.95)
+Q, lc = q_learning(env, n_episodes = 500, gamma = 0.95)
 
 for i in range(100):
     done = False
