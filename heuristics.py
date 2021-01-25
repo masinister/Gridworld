@@ -40,12 +40,15 @@ def eigenvalue_n(g, n=0):
     e = np.linalg.eigvals(L.A)
     return e[n]
 
-def max_eigenvalue(g, n=0):
+def max_eigenvalue(g):
     L = nx.normalized_laplacian_matrix(g)
     e = np.linalg.eigvals(L.A)
     return max(e)
 
-def min_eigenvalue(g, n=0):
+def min_eigenvalue(g):
     L = nx.normalized_laplacian_matrix(g)
     e = np.linalg.eigvals(L.A)
-    return max(e)
+    return min(e)
+
+def avg_eccentricity(g):
+    return np.mean(list(nx.algorithms.distance_measures.eccentricity(g).values()))

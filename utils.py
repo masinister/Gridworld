@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 import copy
-from heuristics import cover_time, diameter, connectivity, eigenvalue_n
+from heuristics import cover_time, diameter, connectivity, eigenvalue_n, max_eigenvalue, avg_eccentricity
 
 def add_random_edges(G, n):
     non_edges = list(nx.non_edges(G))
@@ -25,4 +25,4 @@ def params(g):
     g = copy.deepcopy(g)
     walls = [n for n in list(g.nodes) if g.degree(n)==0]
     g.remove_nodes_from(walls)
-    return diameter(g), connectivity(g), cover_time(g), eigenvalue_n(g, 1)
+    return diameter(g), avg_eccentricity(g), connectivity(g), max_eigenvalue(g)
