@@ -34,7 +34,7 @@ print("Starting experiment:")
 start = time.time()
 data = ray.get([run_one_trial.remote(copy.deepcopy(basegraph)) for i in range(num_trials)])
 end = time.time()
-print(end - start)
+print("{} trials ran in {:.3f} seconds".format(num_trials,end - start))
 
 np.save('data.npy', data)
 plot()
