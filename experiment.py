@@ -3,18 +3,15 @@ import gym_graphworld
 import networkx as nx
 import copy
 from collections import defaultdict
+import concurrent.futures as cf
 import numpy as np
 from mc import q_learning, sarsa
 from utils import add_kleinberg_edges, add_random_edges, params
 from plot import plot
-import concurrent.futures as cf
+from basegraphs import fourrooms
 
 d = (11,11)
-basegraph = nx.grid_graph(dim = d)
-
-nodes_to_remove = [(0,5),(1,5),(3,5),(4,5),(5,5),(6,5),(7,5),(9,5),(10,5),(5,0),(5,1),(5,3),(5,4),(5,5),(5,6),(5,7),(5,9),(5,10)]
-edges_to_remove = basegraph.edges(nodes_to_remove)
-basegraph.remove_edges_from(copy.deepcopy(edges_to_remove))
+basegraph = fourrooms(*d)
 
 def run_one_trial(g):
     add_random_edges(g, n = np.random.randint(1, 5))
