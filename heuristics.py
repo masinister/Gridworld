@@ -38,17 +38,17 @@ def connectivity(g):
 def eigenvalue_n(g, n=0):
     L = nx.normalized_laplacian_matrix(g)
     e = np.linalg.eigvals(L.A)
-    return e[n]
+    return np.real(e[n])
 
 def max_eigenvalue(g):
     L = nx.normalized_laplacian_matrix(g)
     e = np.linalg.eigvals(L.A)
-    return max(e)
+    return np.real(max(e))
 
 def min_eigenvalue(g):
     L = nx.normalized_laplacian_matrix(g)
     e = np.linalg.eigvals(L.A)
-    return min(e)
+    return np.real(min(e))
 
 def avg_eccentricity(g):
     return np.mean(list(nx.algorithms.distance_measures.eccentricity(g).values()))
