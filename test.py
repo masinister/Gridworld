@@ -6,10 +6,10 @@ from collections import defaultdict
 import numpy as np
 from mc import epsilon_greedy, q_learning, sarsa
 from utils import add_kleinberg_edges, add_random_edges, params
-from basegraphs import fourrooms
+from basegraphs import fourrooms, threerooms, tworooms, oneroom, randomwalls
 
 d = (11,11)
-g = fourrooms(*d)
+g = randomwalls(*d)
 add_random_edges(g, n=1)
 print(params(g))
 
