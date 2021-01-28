@@ -6,12 +6,12 @@ from collections import defaultdict
 import numpy as np
 from mc import epsilon_greedy, q_learning, sarsa
 from utils import add_kleinberg_edges, add_random_edges, params
-from basegraphs import fourrooms, threerooms, tworooms, oneroom, randomwalls
+from basegraphs import *
 
 d = (11,11)
 g = randomwalls(*d)
-add_random_edges(g, n=1)
-print(params(g))
+add_random_edges(g, n=3)
+# print(params(g))
 
 env = gym.make('graphworld-v0', graph = g, dim = d)
 nA = env.action_space.n
