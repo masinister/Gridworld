@@ -52,7 +52,8 @@ class GraphworldEnv(gym.Env):
         return self.observation.tobytes(), 0.0, False, info
 
     def reset(self):
-        self.agent_state = sample(self.floors, 1)[0]
+        # self.agent_state = sample(self.floors, 1)[0]
+        self.agent_state = self.agent_start_state
         self.observation = self._next_observation()
         return self.observation.tobytes()
 
