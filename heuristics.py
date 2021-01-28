@@ -4,6 +4,18 @@ import itertools
 import copy
 import numpy as np
 
+# TOO SLOW
+def conductance(g):
+    nodes = list(g.nodes)
+    min = nx.conductance(g, [nodes[0]])
+    for n in range(int(g.number_of_nodes() / 2)):
+        cuts = itertools.combinations(nodes, n)
+        for c in cuts:
+            if c:
+                cond = nx.conductance(g, c)
+                min = cond if cond < min else min
+    return min
+
 def cover_time(g, iter=1000):
     sum = 0
     for i in range(iter):
@@ -18,19 +30,8 @@ def cover_time(g, iter=1000):
         sum += t
     return sum / iter
 
-def conductance(g):
-    nodes = list(g.nodes)
-    min = nx.conductance(g, [nodes[0]])
-    for n in range(int(g.number_of_nodes() / 2)):
-        cuts = itertools.combinations(nodes, n)
-        for c in cuts:
-            if c:
-                cond = nx.conductance(g, c)
-                min = cond if cond < min else min
-    return min
-
 def diameter(g):
-    return nx.algorithms.distance_measures.diameter(g)
+    return nx.diameter(g)
 
 def connectivity(g):
     return nx.algebraic_connectivity(g)
@@ -51,4 +52,11 @@ def min_eigenvalue(g):
     return np.real(min(e))
 
 def avg_eccentricity(g):
-    return np.mean(list(nx.algorithms.distance_measures.eccentricity(g).values()))
+    return np.mean(list(nx.eccentricity(g).values()))
+
+def efficiency(g):
+    return nx.global_efficiency(g)
+
+def closeness_vitality(g):
+    v = list(nx.closeness_vitality(g).values())
+    return np.mean(v[v != -np.inf])
