@@ -3,11 +3,12 @@ import sys
 import os
 import time
 import copy
+import numpy as np
+from random import sample
+import matplotlib.pyplot as plt
 from gym import error, spaces, utils
 from gym.utils import seeding
-import numpy as np
 from PIL import Image as Image
-import matplotlib.pyplot as plt
 
 # define colors
 # 0: black; 1 : gray; 2 : blue; 3 : green; 4 : red
@@ -30,7 +31,9 @@ class GraphworldEnv(gym.Env):
         self.observation_space = spaces.Box(low=0, high=1, shape=self.obs_shape, dtype=np.float32)
 
         self.graph = copy.deepcopy(graph)
-        self.teleporters = [node for node in self.graph if self._teleport_edge(node)]
+        self.walls = [node for node in self.graph.nodes() if self.graph.degree(node) == 0]
+        self.floors = [node for node in self.graph.nodes() if node not in self.walls]
+        self.teleporters = [node for node in self.graph.nodes() if self._teleport_edge(node)]
 
         self.agent_start_state = (0,0)
         self.agent_target_state = (self.dim[0] - 1, self.dim[1] - 1)
@@ -49,7 +52,7 @@ class GraphworldEnv(gym.Env):
         return self.observation.tobytes(), 0.0, False, info
 
     def reset(self):
-        self.agent_state = copy.deepcopy(self.agent_start_state)
+        self.agent_state = sample(self.floors, 1)[0]
         self.observation = self._next_observation()
         return self.observation.tobytes()
 
@@ -69,7 +72,7 @@ class GraphworldEnv(gym.Env):
 
         next_state = (self.agent_state[0] + self.action_pos_dict[action][0],
                       self.agent_state[1] + self.action_pos_dict[action][1])
-        if (self.agent_state, next_state) in self.graph.edges:
+        if (self.agent_state, next_state) in self.graph.edges():
             self.agent_state = next_state
             return True
         return False
@@ -79,7 +82,7 @@ class GraphworldEnv(gym.Env):
         for i in range(self.dim[0]):
             for j in range(self.dim[1]):
                 obs[i,j] = np.array(COLORS[0])
-                if self.graph.degree((i,j)) == 0:
+                if (i,j) in self.walls:
                     obs[i,j] = np.array(COLORS[1])
                 elif (i,j) == self.agent_target_state:
                     obs[i,j] = np.array(COLORS[2])
