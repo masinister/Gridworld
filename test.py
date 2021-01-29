@@ -11,7 +11,7 @@ from basegraphs import *
 d = (11,11)
 g = randomwalls(*d)
 add_random_edges(g, n=3)
-# print(params(g))
+print(params(g))
 
 env = gym.make('graphworld-v0', graph = g, dim = d)
 nA = env.action_space.n

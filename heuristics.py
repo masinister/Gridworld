@@ -5,10 +5,10 @@ import copy
 import numpy as np
 
 # TOO SLOW
-def conductance(g):
+def conductance(g, max_cut = 4):
     nodes = list(g.nodes)
     min = nx.conductance(g, [nodes[0]])
-    for n in range(int(g.number_of_nodes() / 2)):
+    for n in range(max_cut):
         cuts = itertools.combinations(nodes, n)
         for c in cuts:
             if c:

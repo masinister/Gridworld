@@ -25,4 +25,11 @@ def params(g):
     g = copy.deepcopy(g)
     walls = [n for n in list(g.nodes) if g.degree(n)==0]
     g.remove_nodes_from(walls)
-    return diameter(g), avg_eccentricity(g), connectivity(g), efficiency(g), min_eigenvalue(g), max_eigenvalue(g), closeness_vitality(g)
+    return {"diameter": diameter(g),
+            "conductance": conductance(g),
+            "avg_eccentricity": avg_eccentricity(g),
+            "connectivity": connectivity(g),
+            "efficiency": efficiency(g),
+            "min_eigenvalue": min_eigenvalue(g),
+            "max_eigenvalue": max_eigenvalue(g),
+            "closeness_vitality": closeness_vitality(g)}

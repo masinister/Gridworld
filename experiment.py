@@ -9,12 +9,12 @@ import numpy as np
 from mc import q_learning, sarsa
 from utils import add_kleinberg_edges, add_random_edges, params
 from plot import plot
-from basegraphs import fourrooms
+from basegraphs import *
 
 ray.init()
 
 d = (11,11)
-basegraph = fourrooms(*d)
+basegraph = randomwalls(*d)
 
 @ray.remote
 def run_one_trial(g):
@@ -25,10 +25,10 @@ def run_one_trial(g):
     nA = env.action_space.n
 
     Q, lc = q_learning(env, n_episodes = 500, gamma = 0.95)
-    return params(g), [lc]
+    return params(g), lc
 
 data = []
-num_trials = 10
+num_trials = 60
 print("Starting experiment:")
 
 start = time.time()
@@ -37,4 +37,4 @@ end = time.time()
 print("{} trials ran in {:.3f} seconds".format(num_trials,end - start))
 
 np.save('data.npy', data)
-plot()
+plot("diameter")
