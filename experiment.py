@@ -14,7 +14,9 @@ from basegraphs import *
 ray.init()
 
 d = (11,11)
-basegraph = randomwalls(*d)
+data = []
+num_trials = 60
+basegraphs = [fourooms] * num_trials
 
 @ray.remote
 def run_one_trial(g):
@@ -27,14 +29,12 @@ def run_one_trial(g):
     Q, lc = q_learning(env, n_episodes = 500, gamma = 0.95)
     return params(g), lc
 
-data = []
-num_trials = 60
-print("Starting experiment:")
 
+print("Starting experiment:")
 start = time.time()
-data = ray.get([run_one_trial.remote(copy.deepcopy(basegraph)) for i in range(num_trials)])
+data = ray.get([run_one_trial.remote(basegraph(*d)) for basegraph in basegraphs])
 end = time.time()
 print("{} trials ran in {:.3f} seconds".format(num_trials,end - start))
 
 np.save('data.npy', data)
-plot("diameter")
+plot("avg_eccentricity")
