@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
+from collections import defaultdict
 import random
 import copy
 from heuristics import *
@@ -33,3 +34,6 @@ def params(g):
             "min_eigenvalue": min_eigenvalue(g),
             "max_eigenvalue": max_eigenvalue(g),
             "closeness_vitality": closeness_vitality(g)}
+
+def dict_error(q1, q2):
+    return np.sum([np.sum(np.abs(q1[k] - q2[k])) for k in q1.keys()])

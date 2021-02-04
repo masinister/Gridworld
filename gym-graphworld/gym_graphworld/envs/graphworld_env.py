@@ -5,6 +5,7 @@ import time
 import copy
 import numpy as np
 from random import sample
+from collections import defaultdict
 import matplotlib.pyplot as plt
 from gym import error, spaces, utils
 from gym.utils import seeding
@@ -48,14 +49,14 @@ class GraphworldEnv(gym.Env):
             self.observation = self._next_observation()
             info['success'] = True
         if self.agent_state == self.agent_target_state:
-            return self.observation.tobytes(), 1.0, True, info
-        return self.observation.tobytes(), 0.0, False, info
+            return self.agent_state, 1.0, True, info
+        return self.agent_state, 0.0, False, info
 
     def reset(self):
         # self.agent_state = sample(self.floors, 1)[0]
         self.agent_state = self.agent_start_state
         self.observation = self._next_observation()
-        return self.observation.tobytes()
+        return self.agent_state
 
     def render(self, mode='human', close=False):
         img = self.observation
@@ -101,3 +102,28 @@ class GraphworldEnv(gym.Env):
     def close(self):
         plt.close(0)
         return
+
+    def optimal_Q(self, gamma = 0.95, tol = 1e-8):
+        Q = defaultdict(lambda: np.zeros(self.action_space.n))
+        while True:
+            error = 0
+            for state in self.floors:
+                v = np.zeros(self.action_space.n)
+                for action in self.actions:
+                    if action == 0 and state in self.teleporters:
+                        edge = self._teleport_edge(state)
+                        next_state = edge[1]
+                    else:
+                        next_state = (state[0] + self.action_pos_dict[action][0],
+                                      state[1] + self.action_pos_dict[action][1])
+                    if (state, next_state) not in self.graph.edges():
+                        next_state = state
+
+                    if state != self.agent_target_state:
+                        v[action] = (next_state == self.agent_target_state) + gamma * np.max(Q[next_state])
+
+                error = max(error, np.sum(np.abs(Q[state] - v)))
+                Q[state] = v
+            if error < tol:
+                break
+        return Q
