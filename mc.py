@@ -44,7 +44,7 @@ def q_learning(env, n_episodes, gamma=0.95, alpha=0.1, epsilon=1.0):
     learning_curve = []
     q = 0
     for e in range(n_episodes):
-        epsilon *= 0.99
+        epsilon = max(epsilon * 0.99, 0.1)
         done = False
         state = env.reset()
         while not done:
