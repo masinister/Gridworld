@@ -4,7 +4,7 @@ import networkx as nx
 import copy
 from collections import defaultdict
 import numpy as np
-from mc import epsilon_greedy, q_learning, sarsa
+from mc import epsilon_greedy, q_learning
 from utils import *
 from basegraphs import *
 
@@ -18,8 +18,7 @@ nA = env.action_space.n
 opt_Q = env.optimal_Q()
 
 Q = defaultdict(lambda: np.random.rand(nA))
-Q, lc = q_learning(env, n_episodes = 10000, gamma = 0.95, alpha = 0.1)
-print(Q)
+Q, lc = q_learning(env, n_episodes = 300, gamma = 0.95, alpha = 0.1)
 print(dict_error(opt_Q, Q))
 
 for i in range(100):
