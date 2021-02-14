@@ -3,18 +3,19 @@ import random
 from collections import defaultdict, deque
 from tqdm import tqdm
 
-def boltzmann(Q, state):
+def boltzmann(Q, state, tau=0.5):
     a = Q[state]
-    prob = np.exp(a) / np.sum(np.exp(a))
+    prob = np.exp(a / tau)
+    prob /= np.sum(prob)
     return np.random.choice(len(prob), p = prob)
 
-def epsilon_greedy(Q, state, epsilon = 0.1):
+def epsilon_greedy(Q, state, epsilon = 0.95):
     a = Q[state]
     if random.uniform(0,1) < epsilon:
         return random.randint(0, len(a)-1)
     return np.argmax(a)
 
-def q_learning(env, n_episodes, gamma=0.95, alpha=0.1, epsilon=0.1):
+def q_learning(env, n_episodes, gamma=0.95, alpha=0.1, epsilon=0.5):
     Q = defaultdict(lambda: np.zeros(env.action_space.n))
     learning_curve = []
     last30 = deque(maxlen = 30)
@@ -34,6 +35,6 @@ def q_learning(env, n_episodes, gamma=0.95, alpha=0.1, epsilon=0.1):
             q += alpha * td_error
         learning_curve.append(q)
         last30.append(q)
-        if len(last30) == 30 and max(last30) < 1e-4:
+        if len(last30) == 30 and np.std(last30) < 0.01:
             break
     return Q, learning_curve
