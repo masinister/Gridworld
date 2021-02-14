@@ -7,7 +7,7 @@ import ray
 import time
 import numpy as np
 from mc import q_learning, sarsa
-from utils import add_kleinberg_edges, add_random_edges, params
+from utils import *
 from plot import plot
 from basegraphs import *
 
@@ -15,8 +15,8 @@ ray.init()
 
 d = (11,11)
 data = []
-num_trials = 60
-basegraphs = [fourooms] * num_trials
+num_trials = 100
+basegraphs = [fourrooms] * num_trials
 
 @ray.remote
 def run_one_trial(g):
@@ -25,10 +25,10 @@ def run_one_trial(g):
 
     env = gym.make('graphworld-v0', graph = g, dim = d)
     nA = env.action_space.n
+    opt_Q = env.optimal_Q()
 
-    Q, lc = q_learning(env, n_episodes = 500, gamma = 0.95)
-    return params(g), lc
-
+    Q, lc = q_learning(env, n_episodes = 100, gamma = 0.95)
+    return params(g), lc, dict_error(opt_Q, Q)
 
 print("Starting experiment:")
 start = time.time()
@@ -37,4 +37,4 @@ end = time.time()
 print("{} trials ran in {:.3f} seconds".format(num_trials,end - start))
 
 np.save('data.npy', data)
-plot("avg_eccentricity")
+plot("cover time")
