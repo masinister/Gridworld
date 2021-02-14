@@ -14,13 +14,12 @@ def epsilon_greedy(Q, state, epsilon = 0.1):
         return random.randint(0, len(a)-1)
     return np.argmax(a)
 
-def q_learning(env, n_episodes, gamma=0.95, alpha=0.1, epsilon=1.0):
+def q_learning(env, n_episodes, gamma=0.95, alpha=0.1, epsilon=0.1):
     Q = defaultdict(lambda: np.zeros(env.action_space.n))
     learning_curve = []
     last30 = deque(maxlen = 30)
     q = 0
     for e in range(n_episodes):
-        epsilon = max(epsilon * 0.99, 0.1)
         done = False
         state = env.reset()
         while not done:
