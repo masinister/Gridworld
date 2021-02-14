@@ -3,7 +3,7 @@ import random
 from collections import defaultdict, deque
 from tqdm import tqdm
 
-def mellowmax(Q, state, omega = 10.0):
+def boltzmann(Q, state):
     a = Q[state]
     prob = np.exp(a) / np.sum(np.exp(a))
     return np.random.choice(len(prob), p = prob)
@@ -24,7 +24,7 @@ def q_learning(env, n_episodes, gamma=0.95, alpha=0.1, epsilon=1.0):
         done = False
         state = env.reset()
         while not done:
-            action = mellowmax(Q, state)
+            action = boltzmann(Q, state)
             next_state, reward, done, info = env.step(action)
 
             td_target = reward + gamma * np.amax(Q[next_state])
