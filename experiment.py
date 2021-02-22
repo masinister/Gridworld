@@ -6,7 +6,7 @@ from collections import defaultdict
 import ray
 import time
 import numpy as np
-from mc import q_learning, sarsa
+from mc import q_learning
 from utils import *
 from plot import plot
 from basegraphs import *
@@ -27,8 +27,8 @@ def run_one_trial(g):
     nA = env.action_space.n
     opt_Q = env.optimal_Q()
 
-    Q, lc = q_learning(env, n_episodes = 100, gamma = 0.95)
-    return params(g), lc, dict_error(opt_Q, Q)
+    Q, lc = q_learning(env, n_episodes = 1000)
+    return params(g), lc, dict_error(opt_Q, Q), dict_ratio(opt_Q, Q)
 
 print("Starting experiment:")
 start = time.time()
