@@ -36,5 +36,8 @@ def params(g):
             "max eigenvalue": max_eigenvalue(g),
             "closeness vitality": closeness_vitality(g)}
 
-def dict_error(q1, q2):
-    return np.sum([np.sum(np.abs(q1[k] - q2[k])) for k in q1.keys()])
+def dict_error(target, Q):
+    return np.sum([np.sum(np.abs(target[k] - Q[k])) for k in target.keys()])
+
+def dict_ratio(target, Q):
+    return np.sum([np.sum(np.abs(Q[k])) for k in Q.keys()]) / np.sum([np.sum(np.abs(target[k])) for k in target.keys()])
