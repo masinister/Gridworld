@@ -7,14 +7,16 @@ import numpy as np
 # TOO SLOW
 def conductance(g, s=(0,0), t=(10,10), max_cut = 5):
     nodes = list(g.nodes)
-    min = nx.conductance(g, [nodes[0]])
+    sum = 0
+    N = 0
     for n in range(max_cut):
         cuts = itertools.combinations(nodes, n)
         for c in cuts:
             if c and ((s in c and t not in c) or (s not in c and t in c)):
                 cond = nx.conductance(g, c)
-                min = cond if cond < min else min
-    return min
+                sum += cond
+                N += 1
+    return sum / N
 
 def cover_time(g, iter=1000):
     sum = 0
