@@ -15,15 +15,17 @@ def epsilon_greedy(Q, state, epsilon = 0.5):
         return random.randint(0, len(a)-1)
     return np.argmax(a)
 
-def q_learning(env, n_episodes, gamma=0.95, alpha=0.01):
+def q_learning(env, n_steps, gamma=0.95, alpha=0.05):
     Q = defaultdict(lambda: np.zeros(env.action_space.n))
     learning_curve = []
     last30 = deque(maxlen = 30)
     q = 0
-    for e in range(n_episodes):
+    step = 0
+    while step < n_steps:
         done = False
         state = env.reset()
         while not done:
+            step += 1
             action = epsilon_greedy(Q, state)
             next_state, reward, done, info = env.step(action)
 
@@ -36,6 +38,6 @@ def q_learning(env, n_episodes, gamma=0.95, alpha=0.01):
             learning_curve.append(q)
         last30.append(q)
         error = np.abs(last30[-1] - last30[0])
-        if len(last30) == 30 and error < 0.1:
+        if len(last30) == 30 and error < 0.01:
             break
     return Q, learning_curve

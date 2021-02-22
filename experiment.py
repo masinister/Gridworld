@@ -27,7 +27,7 @@ def run_one_trial(g):
     nA = env.action_space.n
     opt_Q = env.optimal_Q()
 
-    Q, lc = q_learning(env, n_episodes = 1000)
+    Q, lc = q_learning(env, n_steps = 1e6)
     return params(g), lc, dict_error(opt_Q, Q), dict_ratio(opt_Q, Q)
 
 print("Starting experiment:")

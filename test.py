@@ -11,14 +11,14 @@ from basegraphs import *
 d = (11,11)
 g = fourrooms(*d)
 add_random_edges(g, n=3)
-print(params(g))
+# print(params(g))
 
 env = gym.make('graphworld-v0', graph = g, dim = d)
 nA = env.action_space.n
 opt_Q = env.optimal_Q()
 
 Q = defaultdict(lambda: np.random.rand(nA))
-Q, lc = q_learning(env, n_episodes = 1000)
+Q, lc = q_learning(env, n_steps = 100000)
 print("error:", dict_error(opt_Q, Q), dict_ratio(opt_Q, Q))
 
 plt.figure(1)
