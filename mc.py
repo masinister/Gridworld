@@ -9,13 +9,13 @@ def boltzmann(Q, state, tau=0.5):
     prob /= np.sum(prob)
     return np.random.choice(len(prob), p = prob)
 
-def epsilon_greedy(Q, state, epsilon = 0.95):
+def epsilon_greedy(Q, state, epsilon = 0.5):
     a = Q[state]
     if random.uniform(0,1) < epsilon:
         return random.randint(0, len(a)-1)
     return np.argmax(a)
 
-def q_learning(env, n_episodes, gamma=0.95, alpha=0.1, epsilon=0.5):
+def q_learning(env, n_episodes, gamma=0.95, alpha=0.01):
     Q = defaultdict(lambda: np.zeros(env.action_space.n))
     learning_curve = []
     last30 = deque(maxlen = 30)
@@ -24,7 +24,7 @@ def q_learning(env, n_episodes, gamma=0.95, alpha=0.1, epsilon=0.5):
         done = False
         state = env.reset()
         while not done:
-            action = boltzmann(Q, state)
+            action = epsilon_greedy(Q, state)
             next_state, reward, done, info = env.step(action)
 
             td_target = reward + gamma * np.amax(Q[next_state])
@@ -33,8 +33,9 @@ def q_learning(env, n_episodes, gamma=0.95, alpha=0.1, epsilon=0.5):
             state = next_state
 
             q += alpha * td_error
-        learning_curve.append(q)
+            learning_curve.append(q)
         last30.append(q)
-        if len(last30) == 30 and np.std(last30) < 0.01:
+        error = np.abs(last30[-1] - last30[0])
+        if len(last30) == 30 and error < 0.1:
             break
     return Q, learning_curve
