@@ -13,10 +13,10 @@ def plot(legend_var):
 
     for i in range(len(data)):
         v = np.real(data[i][0][legend_var])
-        plt.plot(data[i][-2], label = np.float("{:.3f}".format(v)), c=pallete(std_cmap[i]))
+        plt.plot(data[i][1], label = np.float("{:.3f}".format(v)), c=pallete(std_cmap[i]))
 
-    plt.title(legend_var)
-    plt.xlabel("Episodes")
+    plt.title("Learning Curves vs. {}".format(legend_var))
+    plt.xlabel("Time Step")
     plt.ylabel("Cumulative Reward")
     # plt.legend(loc = 'lower right')
     m = plt.cm.ScalarMappable(cmap=pallete)
@@ -24,13 +24,38 @@ def plot(legend_var):
     plt.colorbar(m)
 
     plt.figure(2)
-    y = [row[-1] for row in data]
+    y = [len(row[1]) for row in data]
     plt.scatter(cmap, y)
-    plt.title(legend_var)
+    plt.title("Covergence Time vs. {}".format(legend_var))
     plt.xlabel(legend_var)
-    plt.ylabel("Distance from optimal Q function")
+    plt.ylabel("Covergence Time")
+
+    plt.figure(3)
+    y = [row[2] for row in data]
+    plt.scatter(cmap, y)
+    plt.title("||Q| - |Q_opt|| vs. {}".format(legend_var))
+    plt.xlabel(legend_var)
+    plt.ylabel("||Q| - |Q_opt||")
+
+    plt.figure(4)
+    y = [row[3] for row in data]
+    plt.scatter(cmap, y)
+    plt.title("Q / Q_opt vs. {}".format(legend_var))
+    plt.xlabel(legend_var)
+    plt.ylabel("Q / Q_opt")
+
 
     plt.show()
 
 if __name__ == "__main__":
-    plot("avg eccentricity")
+    plot("connectivity")
+
+"diameter"
+"cover time"
+"conductance"
+"avg eccentricity"
+"connectivity"
+"efficiency"
+"min eigenvalue",
+"max eigenvalue"
+"closeness vitality"
