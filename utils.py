@@ -28,13 +28,14 @@ def params(g):
     g.remove_nodes_from(walls)
     return {"diameter": diameter(g),
             "cover time": cover_time(g),
-            "conductance": conductance(g),
+            # "conductance": conductance(g),
             "avg eccentricity": avg_eccentricity(g),
             "connectivity": connectivity(g),
             "efficiency": efficiency(g),
             "min eigenvalue": min_eigenvalue(g),
             "max eigenvalue": max_eigenvalue(g),
-            "closeness vitality": closeness_vitality(g)}
+            "closeness vitality": closeness_vitality(g),
+            "num shortest paths": num_shortest_paths(g)}
 
 def dict_error(target, Q):
     return np.sum([np.sum(np.abs(target[k] - Q[k])) for k in target.keys()])
