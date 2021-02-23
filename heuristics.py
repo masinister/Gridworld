@@ -7,15 +7,13 @@ import numpy as np
 # TOO SLOW
 def conductance(g, s=(0,0), t=(10,10), max_cut = 5):
     nodes = list(g.nodes)
-    sum = 0
-    N = 0
+    min = nx.conductance(g, [nodes[0]])
     for n in range(max_cut):
         cuts = itertools.combinations(nodes, n)
         for c in cuts:
             if c and ((s in c and t not in c) or (s not in c and t in c)):
                 cond = nx.conductance(g, c)
-                sum += cond
-                N += 1
+                min = cond if cond < min else min
     return sum / N
 
 def cover_time(g, iter=1000):
@@ -62,3 +60,6 @@ def efficiency(g):
 def closeness_vitality(g):
     v = list(nx.closeness_vitality(g).values())
     return np.mean(v[v != -np.inf])
+
+def num_shortest_paths(g, s=(0,0), t=(10,10)):
+    return len(list(nx.all_shortest_paths(g, source=s, target=t)))
