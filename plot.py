@@ -17,7 +17,7 @@ def plot(legend_var):
 
     plt.title("Learning Curves vs. {}".format(legend_var))
     plt.xlabel("Time Step")
-    plt.ylabel("Cumulative Reward")
+    plt.ylabel("Error")
     # plt.legend(loc = 'lower right')
     m = plt.cm.ScalarMappable(cmap=pallete)
     m.set_array(cmap)
@@ -48,7 +48,7 @@ def plot(legend_var):
     plt.show()
 
 if __name__ == "__main__":
-    plot("connectivity")
+    plot("num shortest paths")
 
 "diameter"
 "cover time"
