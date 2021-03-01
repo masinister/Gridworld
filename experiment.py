@@ -21,7 +21,7 @@ basegraphs = [fourrooms] * num_trials
 @ray.remote
 def run_one_trial(g):
     import gym_graphworld
-    add_kleinberg_edges(g, n = np.random.randint(1, 5), r=1)
+    add_kleinberg_edges(g, n = np.random.randint(1, 10), r=1)
 
     env = gym.make('graphworld-v0', graph = g, dim = d)
     nA = env.action_space.n
@@ -29,7 +29,7 @@ def run_one_trial(g):
     target = np.sum([np.sum(np.abs(opt_Q[k])) for k in opt_Q.keys()])
 
     Q, lc = q_learning(env, n_steps = 1e6, target_Q = target)
-    return params(g), lc, dict_error(opt_Q, Q), dict_ratio(opt_Q, Q)
+    return params(g,d), lc, dict_error(opt_Q, Q), dict_ratio(opt_Q, Q)
 
 print("Starting experiment:")
 start = time.time()
