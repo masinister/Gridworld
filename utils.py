@@ -22,20 +22,20 @@ def add_kleinberg_edges(G, n, r):
     for i in edge_indices:
         G.add_edge(non_edges[i][0],non_edges[i][1])
 
-def params(g):
+def params(g, d):
     g = copy.deepcopy(g)
     walls = [n for n in list(g.nodes) if g.degree(n)==0]
     g.remove_nodes_from(walls)
     return {"diameter": diameter(g),
             "cover time": cover_time(g),
-            # "conductance": conductance(g),
+            # "conductance": conductance(g, (d[0]-1, d[1]-1)),
             "avg eccentricity": avg_eccentricity(g),
             "connectivity": connectivity(g),
             "efficiency": efficiency(g),
             "min eigenvalue": min_eigenvalue(g),
             "max eigenvalue": max_eigenvalue(g),
             "closeness vitality": closeness_vitality(g),
-            "num shortest paths": num_shortest_paths(g)}
+            "num shortest paths": num_shortest_paths(g, t=(d[0]-1, d[1]-1))}
 
 def dict_error(target, Q):
     return np.sum([np.sum(np.abs(target[k] - Q[k])) for k in target.keys()])
