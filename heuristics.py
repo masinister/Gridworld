@@ -31,7 +31,7 @@ def cover_time(g, iter=1000):
     return sum / iter
 
 def diameter(g):
-    return nx.diameter(g)
+    return nx.eccentricity(g, (0,0))
 
 def connectivity(g):
     return nx.algebraic_connectivity(g)
