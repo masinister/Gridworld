@@ -28,8 +28,8 @@ def run_one_trial(g):
     opt_Q = env.optimal_Q()
     target = np.sum([np.sum(np.abs(opt_Q[k])) for k in opt_Q.keys()])
 
-    Q, lc = q_learning(env, n_steps = 1e6, target_Q = target)
-    return params(g,d), lc, dict_error(opt_Q, Q), dict_ratio(opt_Q, Q)
+    Q, lc = q_learning(env, n_steps = 1e7, target_Q = target)
+    return params(g,d), lc, dict_error(opt_Q, Q), dict_ratio(opt_Q, Q), dict_error(opt_Q, defaultdict(lambda: np.zeros(5)))
 
 print("Starting experiment:")
 start = time.time()
