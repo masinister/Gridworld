@@ -19,7 +19,7 @@ def plot(legend_var):
 
     plt.title("Learning Curves vs. {}".format(legend_var))
     plt.xlabel("Time Step")
-    plt.ylabel("Error")
+    plt.ylabel("|Q| / |Q_opt|")
     # plt.legend(loc = 'lower right')
     plt.colorbar(m)
 
@@ -46,12 +46,25 @@ def plot(legend_var):
 
     plt.figure(5)
     x = [row[4] for row in data]
-    y = [row[2] for row in data]
+    y = [row[3] for row in data]
     plt.scatter(x, y, c=pallete(std_cmap))
 
     plt.title("Q / Q_opt vs. Q_opt".format(legend_var))
     plt.xlabel("Q_opt")
     plt.ylabel("Q / Q_opt")
+    # plt.legend(loc = 'lower right')
+    m = plt.cm.ScalarMappable(cmap=pallete)
+    m.set_array(cmap)
+    plt.colorbar(m)
+
+    plt.figure(6)
+    x = [row[4] for row in data]
+    y = [len(row[1]) for row in data]
+    plt.scatter(x, y, c=pallete(std_cmap))
+
+    plt.title("Covergence Time vs. Q_opt".format(legend_var))
+    plt.xlabel("Q_opt")
+    plt.ylabel("Convergence Time")
     # plt.legend(loc = 'lower right')
     m = plt.cm.ScalarMappable(cmap=pallete)
     m.set_array(cmap)
