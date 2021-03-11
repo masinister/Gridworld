@@ -26,10 +26,10 @@ def run_one_trial(g):
     env = gym.make('graphworld-v0', graph = g, dim = d)
     nA = env.action_space.n
     opt_Q = env.optimal_Q()
-    target = np.sum([np.sum(np.abs(opt_Q[k])) for k in opt_Q.keys()])
+    target_Q = dict_error(opt_Q, defaultdict(lambda: np.zeros(5)))
 
-    Q, lc = q_learning(env, n_steps = 1e7, target_Q = target)
-    return params(g,d), lc, dict_error(opt_Q, Q), dict_ratio(opt_Q, Q), dict_error(opt_Q, defaultdict(lambda: np.zeros(5)))
+    Q, lc = q_learning(env, n_steps = 1e5, target_Q = target_Q)
+    return params(g,d), lc, dict_error(opt_Q, Q), dict_ratio(opt_Q, Q), target_Q
 
 print("Starting experiment:")
 start = time.time()
