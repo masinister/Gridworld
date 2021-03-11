@@ -21,7 +21,7 @@ COLORS = {0:[0.0,0.0,0.0], 1:[0.5,0.5,0.5], \
 class GraphworldEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, graph, dim):
+    def __init__(self, graph, dim, noise = 0):
         super(GraphworldEnv, self).__init__()
         self.actions = [0, 1, 2, 3, 4]
         self.action_space = spaces.Discrete(5)
@@ -40,6 +40,7 @@ class GraphworldEnv(gym.Env):
         self.agent_target_state = (self.dim[0] - 1, self.dim[1] - 1)
         self.agent_state = copy.deepcopy(self.agent_start_state)
 
+        self.noise = noise
         self.observation = self._next_observation()
 
     def step(self, action):
@@ -67,6 +68,10 @@ class GraphworldEnv(gym.Env):
         plt.pause(0.000001)
 
     def _take_action(self, action):
+        if self.noise > 0:
+            if np.random.uniform() < self.noise:
+                action = np.random.choice(self.actions)
+
         if action == 0 and self.agent_state in self.teleporters:
             edge = self._teleport_edge(self.agent_state)
             self.agent_state = edge[1]
